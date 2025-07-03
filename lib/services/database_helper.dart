@@ -5,6 +5,7 @@ import '../models/first_aid_guideline_model.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
 import '../models/zone_model.dart';
+import '../models/rescue_model.dart';
 
 class DatabaseHelper {
   // --- SINGLETON SETUP ---
@@ -106,6 +107,19 @@ class DatabaseHelper {
       PRIMARY KEY (userId, postId),
       FOREIGN KEY (userId) REFERENCES users (uid) ON DELETE CASCADE,
       FOREIGN KEY (postId) REFERENCES posts (id) ON DELETE CASCADE
+    )
+  ''');
+
+    // Rescue Table
+    await db.execute('''
+    CREATE TABLE rescues (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      message TEXT NOT NULL,
+      locationText TEXT NOT NULL,
+      latitude REAL NOT NULL,
+      longitude REAL NOT NULL,
+      imageUrl TEXT,
+      timestamp TEXT NOT NULL
     )
   ''');
   }
@@ -267,6 +281,21 @@ class DatabaseHelper {
     );
     // Convert the list of maps into a single map of {postId: voteType}
     return {for (var map in maps) map['postId']: map['voteType']};
+  }
+
+
+
+  // --- CRUD METHODS FOR RESCUES ---
+
+  Future<int> insertRescue(Rescue rescue) async {
+    final db = await instance.database;
+    return await db.insert('rescues', rescue.toMap());
+  }
+
+  Future<List<Rescue>> getAllRescues() async {
+    final db = await instance.database;
+    final maps = await db.query('rescues', orderBy: 'timestamp DESC');
+    return List.generate(maps.length, (i) => Rescue.fromMap(maps[i]));
   }
 
 

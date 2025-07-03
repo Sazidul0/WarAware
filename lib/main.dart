@@ -4,6 +4,7 @@ import '../viewmodels/auth_viewmodel.dart';
 import '../viewmodels/post_viewmodel.dart';
 import '../views/welcome_screen.dart';
 import './viewmodels/first_aid_viewmodel.dart';
+import './viewmodels/rescue_viewmodel.dart';
 
 
 void main() {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         // --- 2. ADD THIS LINE ---
         // This makes FirstAidViewModel available to FirstAidScreen.
         ChangeNotifierProvider(create: (_) => FirstAidViewModel()),
+        ChangeNotifierProvider(create: (_) => RescueViewModel()),
       ],
       child: MaterialApp(
         title: 'Community Safety App',

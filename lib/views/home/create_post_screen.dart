@@ -5,6 +5,8 @@ import '../../models/post_model.dart';
 import '../../utils/enum.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/post_viewmodel.dart';
+import 'dart:io'; // Required for File type
+import 'package:image_picker/image_picker.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -18,7 +20,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final _descriptionController = TextEditingController();
   ZoneType _selectedZoneType = ZoneType.Safe;
 
-  // State variables for location
+  XFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
   Position? _currentPosition;
   String _locationMessage = "Fetching location...";
   bool _isFetchingLocation = true;
@@ -27,6 +31,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   void initState() {
     super.initState();
     _getCurrentLocation();
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   Future<void> _getCurrentLocation() async {
@@ -60,13 +70,48 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? selectedImage = await _picker.pickImage(source: source, imageQuality: 80);
+    if (selectedImage != null) {
+      setState(() {
+        _imageFile = selectedImage;
+      });
+    }
+  }
+
+  void _showImagePickerOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Photo Library'),
+                  onTap: () {
+                    _pickImage(ImageSource.gallery);
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _submitPost() async {
-    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       if (_currentPosition == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cannot create post without location. Please enable permissions and try again.')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cannot create post without location.')));
         return;
       }
 
@@ -80,6 +125,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         time: DateTime.now(),
         zoneType: _selectedZoneType,
         description: _descriptionController.text.trim(),
+        imageUrl: _imageFile?.path, // Pass the image file path or null
         postStatus: PostStatus.Unverified,
         verificationScore: 0.0,
         latitude: _currentPosition!.latitude,
@@ -89,16 +135,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       await postViewModel.addPost(newPost);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post created successfully!')));
         Navigator.of(context).pop();
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
   }
 
   @override
@@ -126,7 +165,35 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 onChanged: (newValue) => setState(() => _selectedZoneType = newValue!),
               ),
               const SizedBox(height: 20),
-              // Location Information Widget
+              // Image Picker UI
+              _imageFile == null
+                  ? OutlinedButton.icon(
+                icon: const Icon(Icons.add_photo_alternate_outlined),
+                label: const Text('Add Image (Optional)'),
+                onPressed: _showImagePickerOptions,
+              )
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Image Attached:', style: TextStyle(color: Colors.grey.shade700)),
+                  const SizedBox(height: 8),
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(File(_imageFile!.path), width: double.infinity, height: 200, fit: BoxFit.cover),
+                      ),
+                      IconButton(
+                        icon: const CircleAvatar(backgroundColor: Colors.black54, child: Icon(Icons.close, color: Colors.white)),
+                        onPressed: () => setState(() => _imageFile = null),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // Location Information Widget (unchanged)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(

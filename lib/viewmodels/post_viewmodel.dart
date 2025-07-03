@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/post_model.dart';
 // You will need to create this DatabaseHelper class
 import '../services/database_helper.dart';
+import '../utils/enum.dart';
 
 class PostViewModel extends ChangeNotifier {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
@@ -9,16 +10,28 @@ class PostViewModel extends ChangeNotifier {
   List<Post> _posts = [];
   bool _isLoading = false;
   String? _errorMessage;
-
-  // This map will store the logged-in user's votes: { postId: voteType }
-  // voteType will be 1 for a 'like' and -1 for a 'dislike'.
   Map<int, int> _userVotes = {};
 
-  // Public getters to access state from the UI
-  List<Post> get posts => _posts;
+  // NEW: State for filtering
+  ZoneType? _activeFilter;
+
+  // --- Public Getters ---
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   Map<int, int> get userVotes => _userVotes;
+
+  /// Returns a list of posts, filtered by the active zone type if one is selected.
+  List<Post> get filteredPosts {
+    if (_activeFilter == null) {
+      return _posts; // Return all posts if no filter is active
+    }
+    return _posts.where((post) => post.zoneType == _activeFilter).toList();
+  }
+
+  /// Getter for the active filter to highlight the button in the UI.
+  ZoneType? get activeFilter => _activeFilter;
+
+  // --- Core Data Methods ---
 
   Future<void> fetchPosts() async {
     _isLoading = true;
@@ -42,7 +55,6 @@ class PostViewModel extends ChangeNotifier {
 
     try {
       final newPost = await _dbHelper.insertPost(post);
-      // Add the new post to the top of the list
       _posts.insert(0, newPost);
     } catch (e) {
       _errorMessage = 'Failed to add post: $e';
@@ -50,6 +62,46 @@ class PostViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Updates an existing post in the database and the local state.
+  Future<void> updatePost(Post post) async {
+    try {
+      await _dbHelper.updatePost(post);
+      final index = _posts.indexWhere((p) => p.id == post.id);
+      if (index != -1) {
+        _posts[index] = post;
+        notifyListeners();
+      }
+    } catch (e) {
+      _errorMessage = "Failed to update post: $e";
+      notifyListeners();
+    }
+  }
+
+  /// Deletes a post from the database and the local state.
+  Future<void> deletePost(int postId) async {
+    try {
+      await _dbHelper.deletePost(postId);
+      _posts.removeWhere((post) => post.id == postId);
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = "Failed to delete post: $e";
+      notifyListeners();
+    }
+  }
+
+  // --- NEW AND UPDATED METHODS ---
+
+  /// Sets the active filter and notifies the UI to rebuild.
+  void applyFilter(ZoneType? filter) {
+    // If the user clicks the same filter again, turn it off.
+    if (_activeFilter == filter) {
+      _activeFilter = null;
+    } else {
+      _activeFilter = filter;
+    }
+    notifyListeners();
   }
 
   // --- NEW AND UPDATED METHODS FOR VOTING ---

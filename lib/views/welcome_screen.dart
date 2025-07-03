@@ -4,6 +4,9 @@ import '../viewmodels/auth_viewmodel.dart';
 import '../views/auth/login_screen.dart';
 import './home/post_list_screen.dart';
 
+import './home/first_aid_screen.dart'; // <-- Import the new screen
+import './home/create_post_screen.dart'; // <-- Import create post screen
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -58,6 +61,23 @@ class WelcomeScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
+                // --- NEW: First Aid Guidelines Button ---
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.medical_services_outlined),
+                  label: const Text('First Aid Guidelines'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal, // A different color to stand out
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const FirstAidScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
                 // Button to Login or Create a Post
                 OutlinedButton.icon(
                   icon: const Icon(Icons.login),
@@ -70,16 +90,11 @@ class WelcomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () {
-                    // This logic handles whether to show login or go to create post
                     final authViewModel = context.read<AuthViewModel>();
                     if (authViewModel.currentUser != null) {
-                      // Already logged in, so we can skip login
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => const PostListScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CreatePostScreen())); // Go to Create Post
                     } else {
-                      // Not logged in, go to login screen
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const LoginScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
                     }
                   },
                 ),

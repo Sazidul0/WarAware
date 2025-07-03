@@ -1,0 +1,30 @@
+[
+  {
+    "problemName": "How to treat a minor burn?",
+    "problemDescription": "Immediately cool the burn with cool (not cold) running water for about 10 minutes. Cover the burn with a sterile, non-adhesive bandage or clean cloth. Do not apply ice, butter, or ointments, which can cause more damage."
+  },
+  {
+    "problemName": "What to do for a nosebleed?",
+    "problemDescription": "Sit upright and lean forward. This will reduce blood pressure in the nose veins and prevent swallowing blood. Pinch your nostrils shut with your thumb and index finger and breathe through your mouth. Continue for 10-15 minutes."
+  },
+  {
+    "problemName": "How to handle a sprain?",
+    "problemDescription": "Follow the R.I.C.E. method: Rest the injured limb. Ice the area for 20 minutes at a time to reduce swelling. Compress the area with an elastic bandage. Elevate the injured limb above your heart."
+  },
+  {
+    "problemName": "What are the signs of a heart attack?",
+    "problemDescription": "Signs include chest discomfort (pressure, squeezing, fullness, or pain), discomfort in other areas of the upper body (arms, back, neck, jaw, or stomach), shortness of breath, and other signs like breaking out in a cold sweat, nausea, or lightheadedness. Call emergency services immediately."
+  },
+  {
+    "problemName": "How to use an EpiPen (epinephrine auto-injector)?",
+    "problemDescription": "Remove the blue safety cap. Hold the pen firmly and press the orange tip against the outer thigh, through clothing if necessary. You will hear a click. Hold it in place for 3 seconds. Call emergency services immediately after use."
+  },
+  {
+    "problemName": "What to do if someone is choking?",
+    "problemDescription": "First, encourage them to cough. If they cannot speak, cry, or laugh forcefully, perform the Heimlich maneuver (abdominal thrusts). Stand behind the person, wrap your arms around their waist, make a fist with one hand, and place it slightly above their navel. Grasp the fist with the other hand and press hard into the abdomen with a quick, upward thrust."
+  },
+  {
+    "problemName": "How to treat a cut or scrape?",
+    "problemDescription": "Stop the bleeding by applying gentle pressure with a clean bandage or cloth. Clean the wound with water. Applying an antibiotic ointment can help keep the surface moist and reduce the risk of infection. Cover the wound with a bandage."
+  }
+]

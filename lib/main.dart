@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../viewmodels/post_viewmodel.dart';
 import '../views/welcome_screen.dart';
+import './viewmodels/first_aid_viewmodel.dart';
+
 
 void main() {
   // Ensure that Flutter bindings are initialized before using plugins.
@@ -16,10 +18,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      // These providers make your ViewModels available to the entire widget tree
+      // This list holds all your "global" ViewModels, making them
+      // accessible to any screen in your app.
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel()),
+        // --- 2. ADD THIS LINE ---
+        // This makes FirstAidViewModel available to FirstAidScreen.
+        ChangeNotifierProvider(create: (_) => FirstAidViewModel()),
       ],
       child: MaterialApp(
         title: 'Community Safety App',

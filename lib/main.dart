@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../viewmodels/post_viewmodel.dart';
-import '../views/welcome_screen.dart';
+// --- 1. CHANGE THIS IMPORT ---
+import './views/home/dashboard_screen.dart'; // Was welcome_screen.dart
 import './viewmodels/first_aid_viewmodel.dart';
 import './viewmodels/rescue_viewmodel.dart';
 
@@ -24,8 +25,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel()),
-        // --- 2. ADD THIS LINE ---
-        // This makes FirstAidViewModel available to FirstAidScreen.
         ChangeNotifierProvider(create: (_) => FirstAidViewModel()),
         ChangeNotifierProvider(create: (_) => RescueViewModel()),
       ],
@@ -58,8 +57,9 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
           ),
         ),
-        // The first screen the user will see
-        home: const WelcomeScreen(),
+        // --- 2. CHANGE THIS LINE ---
+        // The first screen the user will see is now the DashboardScreen
+        home: const DashboardScreen(),
       ),
     );
   }

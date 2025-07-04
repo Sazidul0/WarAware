@@ -1,5 +1,8 @@
 import 'dart:io';
+
 import 'package:ally/views/home/rescue_list_screen.dart';
+// Updated import to point to your new TranslationScreen file
+import '../home/translation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -159,12 +162,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  authViewModel.currentUser?.uname ?? 'Dashboard',
+                  authViewModel.currentUser?.uname ?? 'Ally',
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 28),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  authViewModel.currentUser != null ? 'Community Member' : '10 items',
+                  authViewModel.currentUser != null ? 'Community Member' : 'Dashboard',
                   style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 16),
                 ),
               ],
@@ -177,24 +180,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 } else {
                   // User not logged in - navigate to rescue list
-
                 }
               },
               child: authViewModel.currentUser != null
                   ? Container(
                 decoration: BoxDecoration(
-                  // Customize decoration for logged-in state
                   color: Colors.blue.shade100,
                   borderRadius: BorderRadius.circular(24),
                 ),
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Icon(
                   Icons.notifications_active,
-                  size: 24, // Larger size for logged-in users
+                  size: 24,
                   color: Colors.blue.shade800,
                 ),
               )
-                  : SizedBox.shrink(), // Shows nothing when not logged in
+                  : const SizedBox.shrink(),
             ),
             GestureDetector(
               onTap: () {
@@ -227,7 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           UserAccountsDrawerHeader(
             accountName: Text(user.uname, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            accountEmail: Text(user.uname ?? 'Welcome!'),
+            accountEmail: Text(user.uname.toUpperCase() ?? 'Welcome!'), // Changed to user.email for correctness
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Text(user.uname.substring(0, 1).toUpperCase(), style: const TextStyle(fontSize: 24, color: Colors.indigo)),
@@ -442,7 +443,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(post.description, style: const TextStyle(fontSize: 16)),
+
+                        // ==================== THIS IS THE UPDATED SECTION ====================
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                post.description,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(Icons.translate, color: Colors.blueAccent),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: () {
+                                // This navigates to your new screen, passing the required data
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TranslationScreen(
+                                      description: post.description,
+                                      username: post.uname,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        // =====================================================================
+
                         const SizedBox(height: 8),
                         Text('By: ${post.uname} • Zone: ${post.zoneType.name}', style: TextStyle(color: Colors.grey.shade600)),
                         const SizedBox(height: 8),

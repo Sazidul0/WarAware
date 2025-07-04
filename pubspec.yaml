@@ -42,6 +42,10 @@ dependencies:
   url_launcher: ^6.3.1
   image_picker: ^1.1.2
   timeago: ^3.7.1
+  uuid: ^4.5.1
+  bridgefy: ^1.1.9
+  flutter_dotenv: ^5.2.1
+  google_generative_ai: ^0.4.7
 
 dev_dependencies:
   flutter_test:
@@ -97,3 +101,4 @@ flutter:
   # see https://flutter.dev/to/font-from-package
   assets:
     - assets/guidelines.json
+    - .env

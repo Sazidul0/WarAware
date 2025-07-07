@@ -5,6 +5,7 @@ import '../models/first_aid_guideline_model.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
 import '../models/zone_model.dart';
+import '../models/rescue_model.dart';
 
 class DatabaseHelper {
   // --- SINGLETON SETUP ---
@@ -96,6 +97,31 @@ class DatabaseHelper {
         problemDescription TEXT NOT NULL
       )
     ''');
+
+    // User Post votes
+    await db.execute('''
+    CREATE TABLE user_post_votes (
+      userId TEXT NOT NULL,
+      postId INTEGER NOT NULL,
+      voteType INTEGER NOT NULL, -- 1 for like, -1 for dislike
+      PRIMARY KEY (userId, postId),
+      FOREIGN KEY (userId) REFERENCES users (uid) ON DELETE CASCADE,
+      FOREIGN KEY (postId) REFERENCES posts (id) ON DELETE CASCADE
+    )
+  ''');
+
+    // Rescue Table
+    await db.execute('''
+    CREATE TABLE rescues (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      message TEXT NOT NULL,
+      locationText TEXT NOT NULL,
+      latitude REAL NOT NULL,
+      longitude REAL NOT NULL,
+      imageUrl TEXT,
+      timestamp TEXT NOT NULL
+    )
+  ''');
   }
 
   // --- CRUD METHODS FOR POSTS ---
@@ -214,5 +240,67 @@ class DatabaseHelper {
     }
     return null;
   }
+
+
+
+
+
+
+
+  // --- CRUD METHODS FOR VOTES ---
+
+  // Adds or updates a user's vote for a post.
+  Future<void> addOrUpdateVote(String userId, int postId, int voteType) async {
+    final db = await instance.database;
+    await db.insert(
+      'user_post_votes',
+      {'userId': userId, 'postId': postId, 'voteType': voteType},
+      // This will replace the existing vote if the user changes their mind
+      // (e.g., from a like to a dislike).
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Removes a user's vote for a post (when they "un-like" or "un-dislike").
+  Future<void> removeVote(String userId, int postId) async {
+    final db = await instance.database;
+    await db.delete(
+      'user_post_votes',
+      where: 'userId = ? AND postId = ?',
+      whereArgs: [userId, postId],
+    );
+  }
+
+  // Gets all the votes for a specific user to display their state correctly.
+  Future<Map<int, int>> getVotesForUser(String userId) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'user_post_votes',
+      where: 'userId = ?',
+      whereArgs: [userId],
+    );
+    // Convert the list of maps into a single map of {postId: voteType}
+    return {for (var map in maps) map['postId']: map['voteType']};
+  }
+
+
+
+  // --- CRUD METHODS FOR RESCUES ---
+
+  Future<int> insertRescue(Rescue rescue) async {
+    final db = await instance.database;
+    return await db.insert('rescues', rescue.toMap());
+  }
+
+  Future<List<Rescue>> getAllRescues() async {
+    final db = await instance.database;
+    final maps = await db.query('rescues', orderBy: 'timestamp DESC');
+    return List.generate(maps.length, (i) => Rescue.fromMap(maps[i]));
+  }
+
+
 }
+
+
+
 

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../viewmodels/post_viewmodel.dart';
-import '../views/welcome_screen.dart';
+// --- 1. CHANGE THIS IMPORT ---
+import './views/home/dashboard_screen.dart'; // Was welcome_screen.dart
+import './viewmodels/first_aid_viewmodel.dart';
+import './viewmodels/rescue_viewmodel.dart';
+
 
 void main() {
   // Ensure that Flutter bindings are initialized before using plugins.
@@ -16,10 +20,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      // These providers make your ViewModels available to the entire widget tree
+      // This list holds all your "global" ViewModels, making them
+      // accessible to any screen in your app.
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel()),
+        ChangeNotifierProvider(create: (_) => FirstAidViewModel()),
+        ChangeNotifierProvider(create: (_) => RescueViewModel()),
       ],
       child: MaterialApp(
         title: 'Community Safety App',
@@ -50,8 +57,9 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
           ),
         ),
-        // The first screen the user will see
-        home: const WelcomeScreen(),
+        // --- 2. CHANGE THIS LINE ---
+        // The first screen the user will see is now the DashboardScreen
+        home: const DashboardScreen(),
       ),
     );
   }

@@ -3,6 +3,11 @@ import 'package:provider/provider.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../views/auth/login_screen.dart';
 import './home/post_list_screen.dart';
+import './home/request_rescue.dart';
+import './home/first_aid_screen.dart'; // <-- Import the new screen
+import './home/create_post_screen.dart'; // <-- Import create post screen
+import './home/rescue_list_screen.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -41,7 +46,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 50),
-                // Button to view all posts
+                // Button to view all posts (Public)
                 ElevatedButton.icon(
                   icon: const Icon(Icons.article_outlined),
                   label: const Text('View All Posts'),
@@ -58,7 +63,24 @@ class WelcomeScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Button to Login or Create a Post
+                // First Aid Guidelines Button (Public)
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.medical_services_outlined),
+                  label: const Text('First Aid Guidelines'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const FirstAidScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                // Login / Create Post Button
                 OutlinedButton.icon(
                   icon: const Icon(Icons.login),
                   label: const Text('Login / Create Post'),
@@ -70,16 +92,50 @@ class WelcomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () {
-                    // This logic handles whether to show login or go to create post
                     final authViewModel = context.read<AuthViewModel>();
                     if (authViewModel.currentUser != null) {
-                      // Already logged in, so we can skip login
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => const PostListScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CreatePostScreen()));
                     } else {
-                      // Not logged in, go to login screen
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const LoginScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
+                    }
+                  },
+                ),
+                const SizedBox(height: 40), // Added more space for the SOS button
+                // --- Request Rescue Button (Public) ---
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.sos),
+                  label: const Text('REQUEST RESCUE'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RequestRescueScreen()));
+                  },
+                ),
+                const SizedBox(height: 8),
+
+                // --- NEW: Conditional "View Active Alerts" Button ---
+                // We use a Consumer to rebuild only this part of the UI when the auth state changes.
+                Consumer<AuthViewModel>(
+                  builder: (context, authViewModel, child) {
+                    // If the user is logged in, show the button.
+                    if (authViewModel.currentUser != null) {
+                      return TextButton(
+                        child: const Text(
+                          'View Active Alerts',
+                          style: TextStyle(color: Colors.white70, decoration: TextDecoration.underline),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RescueListScreen()));
+                        },
+                      );
+                    } else {
+                      // If the user is not logged in, return an empty container.
+                      return const SizedBox.shrink();
                     }
                   },
                 ),

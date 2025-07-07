@@ -29,7 +29,6 @@ class Post {
     required this.longitude,
   });
 
-  // Convert a Post object into a Map.
   // The keys must correspond to the names of the columns in the database.
   Map<String, dynamic> toMap() {
     return {

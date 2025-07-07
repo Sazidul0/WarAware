@@ -1,7 +1,7 @@
 class User {
   final String uid;
   final String uname;
-  final String passwordHash; // Changed from password
+  final String passwordHash;
   final String? imageUrl;
   final bool isAdmin;
   final String? occupation;
@@ -10,7 +10,7 @@ class User {
   User({
     required this.uid,
     required this.uname,
-    required this.passwordHash, // Added this
+    required this.passwordHash,
     this.imageUrl,
     required this.isAdmin,
     this.occupation,
@@ -21,7 +21,7 @@ class User {
     return {
       'uid': uid,
       'uname': uname,
-      'passwordHash': passwordHash, // Added this
+      'passwordHash': passwordHash,
       'imageUrl': imageUrl,
       'isAdmin': isAdmin ? 1 : 0,
       'occupation': occupation,
@@ -33,7 +33,7 @@ class User {
     return User(
       uid: map['uid'],
       uname: map['uname'],
-      passwordHash: map['passwordHash'], // Added this
+      passwordHash: map['passwordHash'],
       imageUrl: map['imageUrl'],
       isAdmin: map['isAdmin'] == 1,
       occupation: map['occupation'],

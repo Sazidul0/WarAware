@@ -21,7 +21,6 @@ class ChatMessage {
     'senderId': senderId,
     'content': content,
     'timestamp': timestamp.toIso8601String(),
-    // 'isMe' is a UI property, no need to send it over the network
   };
 
   // Create a ChatMessage from a Map (decoded from JSON)

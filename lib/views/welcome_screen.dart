@@ -4,8 +4,8 @@ import '../viewmodels/auth_viewmodel.dart';
 import '../views/auth/login_screen.dart';
 import './home/post_list_screen.dart';
 import './home/request_rescue.dart';
-import './home/first_aid_screen.dart'; // <-- Import the new screen
-import './home/create_post_screen.dart'; // <-- Import create post screen
+import './home/first_aid_screen.dart';
+import './home/create_post_screen.dart';
 import './home/rescue_list_screen.dart';
 
 
@@ -118,7 +118,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                // --- NEW: Conditional "View Active Alerts" Button ---
+
                 // We use a Consumer to rebuild only this part of the UI when the auth state changes.
                 Consumer<AuthViewModel>(
                   builder: (context, authViewModel, child) {

@@ -43,7 +43,6 @@ dependencies:
   image_picker: ^1.1.2
   timeago: ^3.7.1
   uuid: ^4.5.1
-  bridgefy: ^1.1.9
   flutter_dotenv: ^5.2.1
   google_generative_ai: ^0.4.7
 

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../models/post_model.dart';
-import '../../utils/enum.dart'; // Import enums for filtering
+import '../../utils/enum.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../viewmodels/post_viewmodel.dart';
 import '../auth/login_screen.dart';
 import './create_post_screen.dart';
-import './edit_post_screen.dart'; // Import the new edit screen
+import './edit_post_screen.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key});
@@ -18,7 +18,6 @@ class PostListScreen extends StatefulWidget {
 }
 
 class _PostListScreenState extends State<PostListScreen> {
-  // All the existing listener and helper methods remain here
   void _authListener() {
     final authViewModel = context.read<AuthViewModel>();
     final postViewModel = context.read<PostViewModel>();
@@ -198,7 +197,7 @@ class _PostListScreenState extends State<PostListScreen> {
     );
   }
 
-  // UPDATED: This method now takes AuthViewModel as a parameter
+
   Widget _buildPostBody(AuthViewModel authViewModel, PostViewModel postViewModel) {
     // UPDATED: Use the filtered list from the view model
     final posts = postViewModel.filteredPosts;

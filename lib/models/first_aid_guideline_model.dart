@@ -1,5 +1,5 @@
 class FirstAidGuideline {
-  final int? id; // Database primary key
+  final int? id;
   final String problemName;
   final String problemDescription;
 

@@ -1,6 +1,4 @@
-// lib/services/gemini_service.dart
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiService {
@@ -34,7 +32,6 @@ class GeminiService {
     required String targetLanguage,
   }) async {
     try {
-      // The prompt is well-structured and should remain the same.
       final prompt =
           'Translate the following text into $targetLanguage. Provide only the raw translated text, without any additional explanations, introductions, or formatting. The text to translate is: "$textToTranslate"';
 
@@ -44,12 +41,10 @@ class GeminiService {
       if (response.text != null && response.text!.isNotEmpty) {
         return response.text!;
       } else {
-        // This can happen if the model returns an empty response due to safety settings.
         return 'Translation failed. The model returned no text.';
       }
     } catch (e) {
       // This will catch any network errors or API-specific errors from Google.
-      // Check your Debug Console for the output of this print statement.
       print('An error occurred during translation: $e');
       return 'Error: Could not translate text.';
     }

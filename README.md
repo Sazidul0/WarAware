@@ -50,11 +50,11 @@ To explore the Ally codebase, visit our [GitHub repository](https://github.com/S
    ```
 3. Install dependencies:
    ```bash
-   npm install
+   flutter pub get
    ```
 4. Run the application:
    ```bash
-   npm start
+   flutter run
    ```
 
 ## Contributing

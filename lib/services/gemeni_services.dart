@@ -1,4 +1,4 @@
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiService {
@@ -9,9 +9,7 @@ class GeminiService {
   late final GenerativeModel _model;
 
   GeminiService._internal() {
-    // 1. THIS IS THE SECURE WAY: Fetch the key from the environment variables.
-    // This avoids hardcoding your secret key in the source code.
-    final apiKey = "AIzaSyASdyg9ljwo6Y3x72cupSwhuJuAO2TSu14";
+    final apiKey = dotenv.env['GEMINI_API_KEY'];
 
     // This check is crucial to ensure your .env setup is working.
     if (apiKey == null) {
@@ -19,8 +17,6 @@ class GeminiService {
       throw Exception('API Key not found');
     }
 
-    // 2. THIS IS THE MAIN FIX: We've changed the model name.
-    // We use 'gemini-1.5-flash-latest' which is the current, fast, and recommended model.
     _model = GenerativeModel(
       model: 'gemini-1.5-flash-latest',
       apiKey: apiKey,
@@ -44,7 +40,6 @@ class GeminiService {
         return 'Translation failed. The model returned no text.';
       }
     } catch (e) {
-      // This will catch any network errors or API-specific errors from Google.
       print('An error occurred during translation: $e');
       return 'Error: Could not translate text.';
     }

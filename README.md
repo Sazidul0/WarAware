@@ -71,4 +71,4 @@ Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-For questions, feedback, or collaboration inquiries, reach out via [email@example.com] or open an issue on GitHub.
+For questions, feedback, or collaboration inquiries, reach out or open an issue on GitHub.
